@@ -22,7 +22,7 @@ class RenameUI(QWidget):
 		preList = ["C_", "L_", "R_"]
 		suffList = ["_grp", "_geo", "_crv", "_ctl", "_jnt", "_R", "_L"]
 
-		typeList = ["transform", "shape", "mesh", "joint", "locator", "nurbsCurve", "nurbsSurface", "ikHandle", "light", "camera", "all"]
+		typeList = ["transform", "shape", "mesh", "joint", "locator", "nurbsCurve", "nurbsSurface", "ikHandle", "light", "camera"]
 
 		# Tooltips
 		preTltp = "PREFIX - Write, or select from a list, a prefix for selected object/s. If left empty, no prefix will be added"
@@ -39,7 +39,8 @@ class RenameUI(QWidget):
 		capitalizeTltp = "Capitalize - Check to make all copy of selected object/s 'Capitalize'"
 		hierarchyTltp = "INCLUDE HIERARCHY - Check to rename all children and grandchildren under selected object/s"
 		typeTltp = "TYPE TO INCLUDE - Specify which node type you would like to rename in the hierarchy."
-		shapesTltp = "INCLUDE SHAPES - Check to also rename all shape nodes under selected object/s"
+		shapesTltp = "(RECOMMENDED) INCLUDE SHAPES - Check to also rename all shape nodes under selected object/s"
+		excludeTltp = "EXCLUDE SELECTION - Excludes current selection from being renamed"
 		ascendingTltp = "ASCENDING - Orders all selected objects in ascending order"
 		descendingTltp = "DESCENDING - Orders all selected objects in descending order"
 		helpTltp = "HELP - Opens the help menu"
@@ -200,10 +201,19 @@ class RenameUI(QWidget):
 
 
 		# Include shapes button
+		self.excludeBtn = QPushButton("E")
+		self.excludeBtn.setCheckable(True)
+		self.excludeBtn.setToolTip(excludeTltp)
+		self.layout.addWidget(self.excludeBtn)
+
+
+		# Include shapes button
 		self.shapesBtn = QPushButton("S")
 		self.shapesBtn.setCheckable(True)
 		self.shapesBtn.setToolTip(shapesTltp)
 		self.layout.addWidget(self.shapesBtn)
+
+		self.shapesBtn.setChecked(True)
 
 
 		#------------------
@@ -215,11 +225,13 @@ class RenameUI(QWidget):
 		# Order ascending button
 		self.ascendingBtn = QPushButton("▲")
 		self.ascendingBtn.setToolTip(ascendingTltp)
+		self.ascendingBtn.clicked.connect(self.sortList)
 		self.layout.addWidget(self.ascendingBtn)
 
 		# Order ascending button
 		self.descendingBtn = QPushButton("▼")
 		self.descendingBtn.setToolTip(descendingTltp)
+		self.descendingBtn.clicked.connect(self.reverseList)
 		self.layout.addWidget(self.descendingBtn)
 
 
@@ -258,23 +270,9 @@ class RenameUI(QWidget):
 		self.lowercase_Btn = self.lowercaseBtn.isChecked()
 		self.capitalize_Btn = self.capitalizeBtn.isChecked()
 		self.hierarchy_Btn = self.hierarchyBtn.isChecked()
-		self.type_Dropdown = self.typeDropdown.isChecked()
+		self.type_Dropdown = self.typeDropdown.currentText()
+		self.exclude_Btn = self.excludeBtn.isChecked()
 		self.shapes_Btn = self.shapesBtn.isChecked()
-
-		print(self.pre_Dropdown)
-		print(self.rename_Text)
-		print(self.replace_Text)
-		print(self.suff_Dropdown)
-		print(self.padding_Amount)
-		print(self.padding_Start)
-		print(self.step_Amount)
-		print(self.default_Btn)
-		print(self.uppercase_Btn)
-		print(self.lowercase_Btn)
-		print(self.capitalize_Btn)
-		print(self.hierarchy_Btn)
-		print(self.type_Dropdown)
-		print(self.shapes_Btn)
 		
 		return {
 			"prefixText": self.pre_Dropdown,
@@ -290,6 +288,7 @@ class RenameUI(QWidget):
 			"capitalizeState": self.capitalize_Btn,
 			"includeHierarchy": self.hierarchy_Btn,
 			"hierarchyType": self.type_Dropdown,
+			"excludeSelection": self.exclude_Btn,
 			"includeShapes": self.shapes_Btn
 		}
 
@@ -301,3 +300,11 @@ class RenameUI(QWidget):
 		settings = self.collectSettings()
 		if self.validateSettings(settings):
 			rf.RenameFunctions().renameObjects(settings)
+
+	def sortList(self):
+		print("Calling to sort")
+		rf.RenameFunctions().sortList()
+
+	def reverseList(self):
+		print("Calling to reverse")
+		rf.RenameFunctions().reverseSortList()
