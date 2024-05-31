@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import imp
 from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QSpinBox, QRadioButton, QButtonGroup, QFrame
-import maya.cmds as cmds
+from PySide2.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QSpinBox, QRadioButton, QButtonGroup, QFrame, QSpacerItem, QSizePolicy, QSplitter, QToolBar, QAction, QMainWindow
 #--------Tools--------#
 import renameFunctions as rf
+import data
 
 #-------Reload Tool Scripts------#
 imp.reload(rf)
@@ -15,7 +15,6 @@ class RenameUI(QWidget):
 
 		#----Setup----#
 		self.initUI()
-		self.setFixedSize(self.sizeHint())
 
 	def initUI(self):
 		#-----variables-----#
@@ -41,27 +40,22 @@ class RenameUI(QWidget):
 		typeTltp = "TYPE TO INCLUDE - Specify which node type you would like to rename in the hierarchy."
 		shapesTltp = "(RECOMMENDED) INCLUDE SHAPES - Check to also rename all shape nodes under selected object/s"
 		excludeTltp = "EXCLUDE SELECTION - Excludes current selection from being renamed"
-		ascendingTltp = "ASCENDING - Orders all selected objects in ascending order"
-		descendingTltp = "DESCENDING - Orders all selected objects in descending order"
-		helpTltp = "HELP - Opens the help menu"
+		autoSuffixTltp = ""
+
 
 		# Layout section
 		self.layout = QHBoxLayout(self)
 		self.layout.setContentsMargins(0, 0, 0, 0)
 
 
-		#------------------
-		self.addSeparator()
-		#------------------
-
-
 		# Prefix dropdown
 		self.preDropdown = QComboBox(self)
 		self.preDropdown.setEditable(True)
 		self.preDropdown.addItems(preList)
-		self.preDropdown.setCurrentIndex(-1)
 		self.preDropdown.setCurrentText("")
+		self.preDropdown.lineEdit().setPlaceholderText("Prefix")
 		self.preDropdown.setToolTip(preTltp)
+		self.preDropdown.setStyleSheet("width: 30px")
 		self.layout.addWidget(self.preDropdown)
 
 		# Rename textbox
@@ -80,16 +74,11 @@ class RenameUI(QWidget):
 		self.suffDropdown = QComboBox(self)
 		self.suffDropdown.setEditable(True)
 		self.suffDropdown.addItems(suffList)
-		self.suffDropdown.setCurrentIndex(-1)
 		self.suffDropdown.setCurrentText("")
+		self.suffDropdown.lineEdit().setPlaceholderText("Suffix")
 		self.suffDropdown.setToolTip(suffTltp)
+		self.suffDropdown.setStyleSheet("width: 30px")
 		self.layout.addWidget(self.suffDropdown)
-
-		# Button that changes label
-		renameBtn = QPushButton("Rename", self)
-		renameBtn.setToolTip(renameBtnTltp)
-		renameBtn.clicked.connect(self.renameClicked)
-		self.layout.addWidget(renameBtn)
 
 
 		#------------------
@@ -190,7 +179,7 @@ class RenameUI(QWidget):
 
 		# Prefix dropdown
 		self.typeDropdown = QComboBox(self)
-		self.typeDropdown.addItems(typeList)
+		self.typeDropdown.addItems(data.typeList)
 		self.typeDropdown.setToolTip(typeTltp)
 		self.layout.addWidget(self.typeDropdown)
 
@@ -200,10 +189,11 @@ class RenameUI(QWidget):
 		#------------------
 
 
-		# Include shapes button
+		# exclude selected button
 		self.excludeBtn = QPushButton("E")
 		self.excludeBtn.setCheckable(True)
 		self.excludeBtn.setToolTip(excludeTltp)
+		self.excludeBtn.setStyleSheet("width:10px")
 		self.layout.addWidget(self.excludeBtn)
 
 
@@ -211,6 +201,7 @@ class RenameUI(QWidget):
 		self.shapesBtn = QPushButton("S")
 		self.shapesBtn.setCheckable(True)
 		self.shapesBtn.setToolTip(shapesTltp)
+		self.shapesBtn.setStyleSheet("width:10px")
 		self.layout.addWidget(self.shapesBtn)
 
 		self.shapesBtn.setChecked(True)
@@ -221,18 +212,12 @@ class RenameUI(QWidget):
 		#------------------
 
 
-		#-----Reordering Lists-----#
-		# Order ascending button
-		self.ascendingBtn = QPushButton("▲")
-		self.ascendingBtn.setToolTip(ascendingTltp)
-		self.ascendingBtn.clicked.connect(self.sortList)
-		self.layout.addWidget(self.ascendingBtn)
-
-		# Order ascending button
-		self.descendingBtn = QPushButton("▼")
-		self.descendingBtn.setToolTip(descendingTltp)
-		self.descendingBtn.clicked.connect(self.reverseList)
-		self.layout.addWidget(self.descendingBtn)
+		# Button that changes name of object according to the selected settings above
+		renameBtn = QPushButton("Rename", self)
+		renameBtn.setToolTip(renameBtnTltp)
+		renameBtn.clicked.connect(self.renameClicked)
+		renameBtn.setStyleSheet("background-color: teal; width: 70px; height: 15px; padding-bottom: 2px;")
+		self.layout.addWidget(renameBtn)
 
 
 		#------------------
@@ -240,13 +225,16 @@ class RenameUI(QWidget):
 		#------------------
 
 
-		#-----Help Button-----#
-		self.helpBtn = QPushButton("?")
-		self.helpBtn.setToolTip(helpTltp)
-		self.layout.addWidget(self.helpBtn)
+		# Adds to all selected object a suffix according to type of object
+		self.autoSuffixBtn = QPushButton("Auto Suffix")
+		self.autoSuffixBtn.setToolTip(autoSuffixTltp)
+		self.autoSuffixBtn.clicked.connect(self.autoSuffix)
+		self.layout.addWidget(self.autoSuffixBtn)
+
 
 		#-----Finalization-----#
 		self.setLayout(self.layout)
+		#self.layout.addWidget(self.leftMenu)
 
 
 	def addSeparator(self):
@@ -301,10 +289,5 @@ class RenameUI(QWidget):
 		if self.validateSettings(settings):
 			rf.RenameFunctions().renameObjects(settings)
 
-	def sortList(self):
-		print("Calling to sort")
-		rf.RenameFunctions().sortList()
-
-	def reverseList(self):
-		print("Calling to reverse")
-		rf.RenameFunctions().reverseSortList()
+	def autoSuffix(self):
+		rf.RenameFunctions().autoSuffix()

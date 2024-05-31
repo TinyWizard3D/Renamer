@@ -1,12 +1,10 @@
-import maya.cmds as cmds
 import pymel.core as pm
+import maya.cmds as cmds
+import re
+import data
 
 class RenameFunctions():
 	def renameObjects(self, settings):
-		print("##################################")
-		print("---------Starting Renamer---------")
-		print("##################################")
-
 		selectedNodes = pm.ls(sl=True)
 		self.shapeTypes = ["mesh", "nurbsCurve", "nurbsSurface", "subdiv", "particle", "fluidShape"]
 
@@ -42,7 +40,10 @@ class RenameFunctions():
 			# Rename the hierarchy
 			if self.includeHierarchy:
 				for node in selectedNodes:
-					node_hierarchy_ls = pm.listRelatives(node, ad=True, type=self.hierarchyType)
+					if self.hierarchyType == data.typeList[0]:
+						node_hierarchy_ls = pm.listRelatives(node, ad=True)
+					else:
+						node_hierarchy_ls = pm.listRelatives(node, ad=True, type=self.hierarchyType)
 
 					for node in node_hierarchy_ls:
 						if node not in toRename_ls:
@@ -58,9 +59,7 @@ class RenameFunctions():
 			pm.undoInfo(openChunk=True)
 
 			for node in nodeList:
-				print("--------------------")
 				nodeName = node.name()
-				print("Old Name: " + nodeName)
 
 				# Decide if to rename or replace part of name
 				renamedNode = self.renameOrReplace(nodeName)
@@ -82,8 +81,6 @@ class RenameFunctions():
 					assembledName += "Shape"
 
 				node.rename(assembledName, ignoreShape=not self.includeShapes)
-				print("New Name: " + assembledName)
-				print("--------------------")
 
 		finally:
 			pm.undoInfo(closeChunk=True)
@@ -112,34 +109,26 @@ class RenameFunctions():
 		repTxt = self.replaceText
 
 		if (len(repTxt) <= 0 or repTxt == None) and len(nameTxt) > 0:
-			print("calling rename from rename")
 			newName = self.rename(nameTxt)
 			return newName
 		elif len(repTxt) > 0 and len(nameTxt) > 0:
 			if nameTxt in objName:
-				print("calling replace")
 				newName = self.replace(objName, nameTxt, repTxt)
 				return newName
-			else:
-				pm.error("'" + nameTxt + "' is not part of selected objects name: '" + objName + "'")
 		elif len(repTxt) > 0 and len(nameTxt) <= 0:
-			print("calling rename from replace")
 			newName = self.rename(repTxt)
 			return newName
 		elif len(repTxt) <= 0 and len(nameTxt) <= 0:
-			print("passing")
 			return objName
-		else:
-			pm.warning("Can't rename objects.")
+		
+		return objName
 
 
 	def rename(self, newName):
-		print("rename: " + newName)
 		return newName
 
 
 	def replace(self, objName, nameTxt, repTxt):		
-		print("replace: " + nameTxt + ", with: " + repTxt + ", in: " + objName)
 		newName = objName.replace(nameTxt, repTxt)
 		return newName
 
@@ -172,53 +161,26 @@ class RenameFunctions():
 		return objName
 
 
-	# Sorting lists
-	def sortList(self):
-		try:
-			pm.undoInfo(openChunk=True)
-			
-			print("Sorting list")
-			selectedNodes = pm.ls(sl=True)
+	def autoSuffix(self):
+		selectedNodes = pm.ls(sl=True)
 
-			# Capture the original parent and positions within their parent groups
-			original_positions = {node: (node.getParent(), node.index()) for node in selectedNodes}
-
-			# Sort the nodes by name
-			sortedNodes = sorted(selectedNodes, key=lambda x: x.name())
-
-			# Reorder within their parent groups based on original positions
-			for parent, positions in original_positions.items():
-				parent, original_index = positions
-				siblings = pm.listRelatives(parent, children=True)
-				# Find the new indices for the sorted nodes
-				new_indices = {node: siblings.index(node) for node in sortedNodes if node.getParent() == parent}
-
-				for node in sortedNodes:
-					if node.getParent() == parent:
-						# Reorder node within its parent group
-						pm.reorder(node, new_indices[node])
-
-		finally:
-			pm.undoInfo(closeChunk=True)
-
-	def reverseSortList(self):
-		try:
-			pm.undoInfo(openChunk=True)
-
-			print("reversing list")
-			selectedNodes = pm.ls(sl=True)
-
-			originalPositions = {node: node.getParent() for node in selectedNodes}
-
-			sortedNodes = sorted(selectedNodes, key=lambda x: x.name())
-			sortedNodes.reverse()
-
-			for parent in set(originalPositions.values()):
-				children = [node for node in sortedNodes if originalPositions[node] == parent]
-				for node in children:
-					pm.reorder(node, front=True)
-
-
-		finally:
-			pm.undoInfo(closeChunk=True)
-
+		if selectedNodes:
+			try:
+				pm.undoInfo(openChunk=True)
+				
+				for node in selectedNodes:
+					nodeName = node.name()
+					curveChildren = pm.listRelatives(node, children=True, type="nurbsCurve")
+					locatorChildren = pm.listRelatives(node, children=True, type="locator")
+					if node.nodeType() == "joint":
+						pm.rename(node, nodeName + "_jnt")
+					elif curveChildren:
+						pm.rename(node, nodeName + "_ctl")
+					elif locatorChildren:
+						pm.rename(node, nodeName + "_loc")
+					elif node.nodeType() == "transform":
+						pm.rename(node, nodeName + "_geo")
+			finally:
+				pm.undoInfo(closeChunk=True)
+		else:
+			pm.warning("No nodes selected.")
