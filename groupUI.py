@@ -1,5 +1,15 @@
 from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QSpinBox, QLineEdit, QComboBox
+from PySide2.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QSpinBox, QLineEdit, QComboBox, QFrame
+import imp
+import data
+import generalFunctions as gef
+
+#--------Tools--------#
+import groupFunctions as gf
+
+#-------Reload Tool Scripts------#
+imp.reload(gf)
+imp.reload(gef)
 
 class GroupUI(QWidget):
 	def __init__(self, parent=None):
@@ -7,79 +17,50 @@ class GroupUI(QWidget):
 		self.initUI()
 
 	def initUI(self):
-		typeList = ["transform", "shape", "mesh", "joint", "locator", "nurbsCurve", "nurbsSurface", "ikHandle", "light", "camera"]
-
-		# Tooltips
-		duplicateTltp = "FIND DUPLICATES - Click this button to select all duplicate nodes"
-		printTltp = "SAVE SELECTED - Click this button to print and save selected nodes"
-		savedTltp = "SELECT SAVED LIST - Click this button to select previously saved list"
-		boundJointsTltp = "SELECT BOUND JOINTS - Click this button to select all joints that bind the selected geometry"
-		influenceTltp = ""
-		fiveVertsTltp = "Selects all vertices in a mesh with 5 or more influences (may take a few minutes in high density meshes)"
-		typeTltp = "TYPE TO SELECT - Specify which node type you would like to select"
+		genf = gef.GeneralFunction()
 
 		# Layout section
 		self.layout = QHBoxLayout(self)
 		self.layout.setContentsMargins(0, 0, 0, 0)
 
 		# Label to change
-		self.findBox = QLineEdit(self)
-		self.findBox.setPlaceholderText("group")
-		self.layout.addWidget(self.findBox)
-
-		# Padding Label
-		typeLabel = QLabel("Type:")
-		self.layout.addWidget(typeLabel)
-
-		# Prefix dropdown
-		self.typeDropdown = QComboBox(self)
-		self.typeDropdown.setEditable(True)
-		self.typeDropdown.addItems(typeList)
-		self.typeDropdown.setCurrentText("")
-		self.typeDropdown.lineEdit().setPlaceholderText("Select node type")
-		self.typeDropdown.setToolTip(typeTltp)
-		self.typeDropdown.setStyleSheet("width: 100px")
-		self.layout.addWidget(self.typeDropdown)
-
-		# Button that changes label
-		btn = QPushButton("Select", self)
-		self.layout.addWidget(btn)
+		self.groupNameBox = QLineEdit(self)
+		self.groupNameBox.setPlaceholderText("Group name")
+		self.layout.addWidget(self.groupNameBox)
 
 		# Find Duplicates button
-		self.duplicateBtn = QPushButton("Find Duplicates")
-		self.duplicateBtn.setCheckable(True)
-		self.duplicateBtn.setToolTip(duplicateTltp)
-		self.layout.addWidget(self.duplicateBtn)
+		self.groupBtn = QPushButton(self)
+		genf.setButton(self.groupBtn, self.layout, text="Group Selected", isMainBtn=True, iconName="npoIcon")
+		self.groupBtn.clicked.connect(self.groupSelected)
 
-		# Print and save button
-		self.printBtn = QPushButton("Save Selected")
-		self.printBtn.setCheckable(True)
-		self.printBtn.setToolTip(duplicateTltp)
-		self.layout.addWidget(self.printBtn)
 
-		# Select saved button
-		self.savedBtn = QPushButton("Select Saved")
-		self.savedBtn.setCheckable(True)
-		self.savedBtn.setToolTip(savedTltp)
-		self.layout.addWidget(self.savedBtn)
+		#------------------
+		genf.addSeparator(self.layout)
+		#------------------
+
 
 		# Select bound joints button
-		self.boundJointsBtn = QPushButton("Select Bound Joints")
-		self.boundJointsBtn.setCheckable(True)
-		self.boundJointsBtn.setToolTip(boundJointsTltp)
-		self.layout.addWidget(self.boundJointsBtn)
-
-		# Select 5 vert influeces button
-		self.fiveVertsBtn = QPushButton("Select Influnced Vertices")
-		self.fiveVertsBtn.setCheckable(True)
-		self.fiveVertsBtn.setToolTip(fiveVertsTltp)
-		self.layout.addWidget(self.fiveVertsBtn)
-
-		# Amount of Padding
-		self.influenceAmount = QSpinBox(self)
-		self.influenceAmount.setRange(0, 999999)
-		self.influenceAmount.setValue(0)
-		self.influenceAmount.setToolTip(influenceTltp)
-		self.layout.addWidget(self.influenceAmount)
+		self.NPOCreateBtn = QPushButton(self)
+		genf.setButton(self.NPOCreateBtn, self.layout, isIcon=True, iconName="npoIcon")
+		self.NPOCreateBtn.clicked.connect(self.createNPO)
 
 		self.setLayout(self.layout)
+
+	def collectSettings(self):
+		self.group_name_box = self.groupNameBox.text()
+		
+		return {
+			"groupText": self.group_name_box,
+		}
+
+	def validateSettings(self, settings):
+		#WRITE AND DECIDE ON PROPER VALIDATION FOR SETTINGS
+		return True
+
+	def groupSelected(self):
+		settings = self.collectSettings()
+		if self.validateSettings(settings):
+			gf.GroupFunctions().groupNodes(settings)
+
+	def createNPO(self):
+		gf.GroupFunctions().createNPO()

@@ -2,12 +2,14 @@
 import sys
 import imp
 from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QStackedWidget, QFrame, QSpacerItem, QSizePolicy
+from PySide2.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QStackedWidget, QFrame, QSpacerItem, QSizePolicy, QLayout
 from PySide2.QtGui import QPalette, QColor
 from shiboken2 import wrapInstance
 import maya.OpenMayaUI as omui
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 import maya.cmds as cmds
+import pymel.core as pm
+import re
 
 #--------Tools--------#
 import renameUI
@@ -51,17 +53,20 @@ class Renamer(MayaQWidgetDockableMixin, QWidget):
 		helpTltp = "HELP - Opens the help menu"
 
 		self.layout = QHBoxLayout(self)
+
 		self.layout.setContentsMargins(10, 0, 10, 0)
 
 		self.rightMenu = QWidget()
 		self.rightLayout = QHBoxLayout()
 		self.rightLayout.setContentsMargins(0, 0, 0, 0)
 		self.rightMenu.setLayout(self.rightLayout)
+		#self.rightLayout.setSizeConstraint(QLayout.SetMinimumSize)
 
 		self.leftMenu = QWidget()
 		self.leftLayout = QHBoxLayout()
 		self.leftLayout.setContentsMargins(0, 0, 0, 0)
 		self.leftMenu.setLayout(self.leftLayout)
+		#self.leftLayout.setSizeConstraint(QLayout.SetMinimumSize)
 
 		# Dropdown list to change layouts
 		self.toolsDropdown = QComboBox(self)
@@ -116,6 +121,7 @@ class Renamer(MayaQWidgetDockableMixin, QWidget):
 		spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 		self.layout.addItem(spacer)
 		self.layout.addWidget(self.rightMenu)
+
 		self.changeCategory()
 
 	def changeCategory(self):
@@ -187,7 +193,7 @@ class Renamer(MayaQWidgetDockableMixin, QWidget):
 			return all_nodes.index(node)
 
 	def natural_sort_key(self, s):
-	    return [int(text) if text.isdigit() else text.lower() for text in re.split('([0-9]+)', s.name())]
+		return [int(text) if text.isdigit() else text.lower() for text in re.split('([0-9]+)', s.name())]
 
 
 	def findFirstIndex(self, nodeList):
@@ -207,32 +213,30 @@ class Renamer(MayaQWidgetDockableMixin, QWidget):
 def show_renamer():
 	global widgetInstance
 
-	# Close the existing instance if it exists
+	dock_name = "renamerWorkspaceControl"
+
+	# Restore if it already exists
+	if cmds.workspaceControl(dock_name, q=True, exists=True):
+		cmds.workspaceControl(dock_name, e=True, restore=True)
+		return
+
+	# Close existing instance properly
 	if widgetInstance is not None:
 		try:
-			print("Closing existing instance")
 			widgetInstance.close()
 		except Exception as e:
-			print("Error closing instance: {}".format(e))
+			print(f"Error closing instance: {e}")
 
-	# Create and show a new instance
 	try:
 		widgetInstance = Renamer()
-		widgetInstance.setObjectName('renamerWindow')
+		widgetInstance.setObjectName("renamerWindow")  # Ensure unique object name
 
-		# Delete existing workspace control if it exists
-		if cmds.workspaceControl('renamerWorkspaceControl', q=True, exists=True):
-			cmds.deleteUI('renamerWorkspaceControl', control=True)
+		# Create workspace control (DO NOT delete UI first)
+		cmds.workspaceControl(dock_name, label="Renamer", retain=False, floating=False, dockToMainWindow=("top", 1))
 
-		# Create and dock the control with proper layout
-		cmds.workspaceControl(
-			'renamerWorkspaceControl',
-			label='Renamer',
-			retain=False,
-			floating=False,
-			dockToMainWindow=("top", 1))
-		controlLayout = omui.MQtUtil.findControl('renamerWorkspaceControl')
+		# Get control layout and attach the widget
+		controlLayout = omui.MQtUtil.findControl(dock_name)
 		controlPtr = wrapInstance(int(controlLayout), QWidget)
 		controlPtr.layout().addWidget(widgetInstance)
 	except Exception as e:
-		print("Error showing instance: {}".format(e))
+		print(f"Error showing instance: {e}")

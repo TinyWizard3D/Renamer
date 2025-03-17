@@ -2,14 +2,13 @@ from PySide2.QtWidgets import QApplication, QInputDialog, QListWidget, QVBoxLayo
 import os
 import pymel.core as pm
 import maya.cmds as cmds
+import data
 
 class FindFunctions():
 	def __init__(self):
 		self.file_path = None
 
 	def selectNodes(self, settings):
-		self.shapeTypes = ["mesh", "nurbsCurve", "nurbsSurface", "subdiv", "particle", "fluidShape"]
-
 		#----settings----#
 		self.findText = ""
 		self.selectType = ""
@@ -19,14 +18,18 @@ class FindFunctions():
 		try:
 			matchingObjects = pm.ls(self.findText)
 
-			if self.findText:
+			if self.findText and self.selectType != data.typeList[0]:
 				objTypeLs = [obj for obj in matchingObjects if pm.nodeType(obj) == self.selectType]
+			else:
+				pm.select(matchingObjects)
+
 			if objTypeLs:
 				pm.select(objTypeLs)
 			else:
 				pm.warning("Couldn't find any matching objects.")
 		except Exception as e:
 			pm.error("An error occurred: {}".format(e))
+
 
 	def populateSettings(self, settings):
 		self.findText = settings.get('findText', self.findText)

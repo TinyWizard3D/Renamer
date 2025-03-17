@@ -1,12 +1,11 @@
 import pymel.core as pm
 import maya.cmds as cmds
-import re
 import data
+
 
 class RenameFunctions():
 	def renameObjects(self, settings):
 		selectedNodes = pm.ls(sl=True)
-		self.shapeTypes = ["mesh", "nurbsCurve", "nurbsSurface", "subdiv", "particle", "fluidShape"]
 
 		if len(selectedNodes) > 0:
 			#----settings----#
@@ -51,7 +50,7 @@ class RenameFunctions():
 	
 			self.assembleName(toRename_ls, settings)
 		else:
-			pm.error("No Objects Selected.")
+			pm.error("No Nodes Selected.")
 
 
 	def assembleName(self, nodeList, settings):
@@ -77,7 +76,7 @@ class RenameFunctions():
 				assembledName = "{}{}{}".format(assembledStrName, numberedName, self.suffixText)
 
 				# Add "Shape" as suffix if node is of type Shape
-				if node.nodeType() in self.shapeTypes:
+				if node.nodeType() in data.shapeTypes:
 					assembledName += "Shape"
 
 				node.rename(assembledName, ignoreShape=not self.includeShapes)
