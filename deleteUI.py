@@ -26,30 +26,32 @@ class DeleteUI(QWidget):
 		
 		# Type Label
 		startLabel = QLabel("from Start:")
+		genf.setStyledTooltip(startLabel, data.delStartTltpTitle, data.delStartTltp)
 		self.layout.addWidget(startLabel)
 
 		# Amount of Influences
 		self.delStartAmount = QSpinBox(self)
 		self.delStartAmount.setRange(0, 999999)
 		self.delStartAmount.setValue(0)
-		self.delStartAmount.setToolTip(data.delStartTltp)
+		genf.setStyledTooltip(self.delStartAmount, data.delStartTltpTitle, data.delStartTltp)
 		self.layout.addWidget(self.delStartAmount)
 
 		# Label to change
 		self.delBox = QLineEdit(self)
 		self.delBox.setPlaceholderText("Objects to delete")
-		self.delBox.setToolTip(data.delTltp)
+		genf.setStyledTooltip(self.delBox, data.delTltpTitle, data.delTltp)
 		self.layout.addWidget(self.delBox)
 
 		# Type Label
 		endLabel = QLabel("from End:")
+		genf.setStyledTooltip(endLabel, data.delEndTltpTitle, data.delEndTltp)
 		self.layout.addWidget(endLabel)
 
 		# Amount of Influences
 		self.delEndAmount = QSpinBox(self)
 		self.delEndAmount.setRange(0, 999999)
 		self.delEndAmount.setValue(0)
-		self.delEndAmount.setToolTip(data.delEndTltp)
+		genf.setStyledTooltip(self.delEndAmount, data.delEndTltpTitle, data.delEndTltp)
 		self.layout.addWidget(self.delEndAmount)
 
 		# Type Label
@@ -59,7 +61,7 @@ class DeleteUI(QWidget):
 		# Prefix dropdown
 		self.typeDropdown = QComboBox(self)
 		self.typeDropdown.addItems(data.typeList)
-		self.typeDropdown.setToolTip(data.typeTltp)
+		genf.setStyledTooltip(self.typeDropdown, data.typeTltpTitle, data.typeTltp)
 		self.layout.addWidget(self.typeDropdown)
 
 
@@ -70,12 +72,12 @@ class DeleteUI(QWidget):
 
 		#-----Additions-----#
 		self.hierarchyBtn = QPushButton(self)
-		genf.setButton(self.hierarchyBtn, self.layout, checkable=True, tooltip=data.hierarchyTltp, isIcon=True, iconName="hierarchyIcon")
+		genf.setButton(self.hierarchyBtn, self.layout, checkable=True, tooltipTitle=data.hierarchyTltpTitle, tooltip=data.hierarchyTltp, isIcon=True, iconName="hierarchyIcon")
 
 		# Prefix dropdown
 		self.hierarchyTypeDropdown = QComboBox(self)
 		self.hierarchyTypeDropdown.addItems(data.typeList)
-		self.hierarchyTypeDropdown.setToolTip(data.typeTltp)
+		genf.setStyledTooltip(self.hierarchyTypeDropdown, data.typeTltpHierarchyTitle, data.typeTltpHierarchy)
 		self.layout.addWidget(self.hierarchyTypeDropdown)
 
 
@@ -86,12 +88,12 @@ class DeleteUI(QWidget):
 
 		# exclude selected button
 		self.excludeBtn = QPushButton(self)
-		genf.setButton(self.excludeBtn, self.layout, checkable=True, tooltip=data.excludeTltp, isIcon=True, iconName="excludeSelectionIcon")
+		genf.setButton(self.excludeBtn, self.layout, checkable=True, tooltipTitle=data.excludeTltpTitle, tooltip=data.excludeTltp, isIcon=True, iconName="excludeSelectionIcon")
 
 
 		# Include shapes button
 		self.shapesBtn = QPushButton(self)
-		genf.setButton(self.shapesBtn, self.layout, checked=True, checkable=True, tooltip=data.shapesTltp, isIcon=True, iconName="shapeIcon")
+		genf.setButton(self.shapesBtn, self.layout, checked=True, checkable=True, tooltipTitle=data.shapesTltpTitle, tooltip=data.shapesTltp, isIcon=True, iconName="shapeIcon")
 
 
 		#------------------
@@ -101,7 +103,7 @@ class DeleteUI(QWidget):
 
 		# Button that changes label
 		deleteButton = QPushButton("Delete", self)
-		genf.setButton(deleteButton, self.layout, text="Delete", isMainBtn=True, iconName="deleteIcon")
+		genf.setButton(deleteButton, self.layout, text="Delete", tooltipTitle=data.delBtnTltpTitle, tooltip=data.delBtnTltp, isMainBtn=True, iconName="deleteIcon")
 		deleteButton.clicked.connect(self.deleteClicked)
 
 
@@ -112,7 +114,7 @@ class DeleteUI(QWidget):
 
 		# Find Duplicates button
 		self.delUnconnectedBtn = QPushButton(self)
-		genf.setButton(self.delUnconnectedBtn, self.layout, tooltip=data.unconnectedTltp, isIcon=True, iconName="unconnectedIcon")
+		genf.setButton(self.delUnconnectedBtn, self.layout, tooltipTitle=data.unconnectedTltpTitle, tooltip=data.unconnectedTltp, isIcon=True, iconName="unconnectedIcon")
 		self.delUnconnectedBtn.clicked.connect(self.delUnconnected)
 
 
@@ -123,7 +125,7 @@ class DeleteUI(QWidget):
 
 		# Deletes all namespaces in the scene
 		self.deleteNamespacesBtn = QPushButton(self)
-		genf.setButton(self.deleteNamespacesBtn, self.layout, tooltip=data.deleteNamespacesTltp, isIcon=True, iconName="renameIcon")
+		genf.setButton(self.deleteNamespacesBtn, self.layout, tooltipTitle=data.deleteNamespacesTltpTitle, tooltip=data.deleteNamespacesTltp, isIcon=True, iconName="renameIcon")
 		self.deleteNamespacesBtn.clicked.connect(self.deleteNamespaces)
 
 		self.setLayout(self.layout)

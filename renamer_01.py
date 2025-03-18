@@ -2,8 +2,8 @@
 import sys
 import imp
 from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QStackedWidget, QFrame, QSpacerItem, QSizePolicy, QLayout
-from PySide2.QtGui import QPalette, QColor
+from PySide2.QtWidgets import QApplication, QWidget, QHBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QStackedWidget, QFrame, QSpacerItem, QSizePolicy, QLayout, QToolTip
+from PySide2.QtGui import QPalette, QColor, QFont
 from shiboken2 import wrapInstance
 import maya.OpenMayaUI as omui
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
@@ -17,6 +17,7 @@ import findUI
 import deleteUI
 import groupUI
 import data
+import generalFunctions as gef
 
 #-------Reload Tool Scripts------#
 imp.reload(renameUI)
@@ -24,9 +25,12 @@ imp.reload(findUI)
 imp.reload(deleteUI)
 imp.reload(groupUI)
 imp.reload(data)
+imp.reload(gef)
 
 #--------Code Starts Here--------#
 widgetInstance = None
+
+QApplication.instance().setStyleSheet(data.tooltipStylesheet)
 
 def getMayaMainWindow():
     main_window_ptr = omui.MQtUtil.mainWindow()
@@ -47,10 +51,7 @@ class Renamer(MayaQWidgetDockableMixin, QWidget):
 	def initUI(self):
 		self.setWindowTitle('')
 
-		# Tooltips
-		ascendingTltp = "ASCENDING - Orders all selected objects in ascending order"
-		descendingTltp = "DESCENDING - Orders all selected objects in descending order"
-		helpTltp = "HELP - Opens the help menu"
+		genf = gef.GeneralFunction()
 
 		self.layout = QHBoxLayout(self)
 
@@ -83,24 +84,21 @@ class Renamer(MayaQWidgetDockableMixin, QWidget):
 
 		#-----Reordering Lists-----#
 		# Order ascending button
-		self.ascendingBtn = QPushButton("▼")
-		self.ascendingBtn.setToolTip(ascendingTltp)
-		self.ascendingBtn.clicked.connect(self.sortList)
-		self.ascendingBtn.setStyleSheet("width:20px")
-		self.rightLayout.addWidget(self.ascendingBtn)
+		self.descendingBtn = QPushButton("▼")
+		genf.setButton(self.descendingBtn, self.rightLayout, text="▼", tooltipTitle=data.descendingTltpTitle, tooltip=data.descendingTltp)
+		self.descendingBtn.clicked.connect(self.sortList)
+		self.descendingBtn.setStyleSheet("width:20px")
 
 		# Order ascending button
-		self.descendingBtn = QPushButton("▲")
-		self.descendingBtn.setToolTip(descendingTltp)
-		self.descendingBtn.clicked.connect(self.reverseSortList)
-		self.descendingBtn.setStyleSheet("width:20px")
-		self.rightLayout.addWidget(self.descendingBtn)
+		self.ascendingBtn = QPushButton("▲")
+		genf.setButton(self.ascendingBtn, self.rightLayout, text="▲", tooltipTitle=data.ascendingTltpTitle, tooltip=data.ascendingTltp)
+		self.ascendingBtn.clicked.connect(self.reverseSortList)
+		self.ascendingBtn.setStyleSheet("width:20px")
 
 		#-----Help Button-----#
 		self.helpBtn = QPushButton("?")
-		self.helpBtn.setToolTip(helpTltp)
+		genf.setButton(self.helpBtn, self.rightLayout, text="?", tooltipTitle=data.helpTltpTitle, tooltip=data.helpTltp)
 		self.helpBtn.setStyleSheet("width: 10px")
-		self.rightLayout.addWidget(self.helpBtn)
 
 		# Stacked Widget
 		self.stackedWidget = QStackedWidget(self)

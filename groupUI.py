@@ -26,11 +26,12 @@ class GroupUI(QWidget):
 		# Label to change
 		self.groupNameBox = QLineEdit(self)
 		self.groupNameBox.setPlaceholderText("Group name")
+		genf.setStyledTooltip(self.groupNameBox, data.groupNameBoxTltpTitle, data.groupNameBoxTltp)
 		self.layout.addWidget(self.groupNameBox)
 
 		# Find Duplicates button
 		self.groupBtn = QPushButton(self)
-		genf.setButton(self.groupBtn, self.layout, text="Group Selected", isMainBtn=True, iconName="npoIcon")
+		genf.setButton(self.groupBtn, self.layout, text="Group Selected", tooltipTitle=data.groupBtnTltpTitle, tooltip=data.groupBtnTltp, isMainBtn=True, iconName="npoIcon")
 		self.groupBtn.clicked.connect(self.groupSelected)
 
 
@@ -41,7 +42,7 @@ class GroupUI(QWidget):
 
 		# Select bound joints button
 		self.NPOCreateBtn = QPushButton(self)
-		genf.setButton(self.NPOCreateBtn, self.layout, isIcon=True, iconName="npoIcon")
+		genf.setButton(self.NPOCreateBtn, self.layout, tooltipTitle=data.npoTltpTitle, tooltip=data.npoTltp, isIcon=True, iconName="npoIcon")
 		self.NPOCreateBtn.clicked.connect(self.createNPO)
 
 		self.setLayout(self.layout)

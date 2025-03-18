@@ -41,4 +41,6 @@ class GeneralFunction():
 		layout.addWidget(separator)
 
 	def setStyledTooltip(self, element, title, description):
-		element.setToolTip(f"<b>{title}</b><br><br>{description}")
+		#iconQuestion = os.path.join(self.iconsPath, "question_frame.png")
+		element.setObjectName("customTooltip")
+		element.setToolTip(f"""<strong>{title}</strong><br><br>{description}""")

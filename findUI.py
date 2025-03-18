@@ -26,6 +26,7 @@ class FindUI(QWidget):
 		# Label to change
 		self.findBox = QLineEdit(self)
 		self.findBox.setPlaceholderText("Search & Select")
+		genf.setStyledTooltip(self.findBox, data.findBoxTltpTitle, data.findBoxTltp)
 		self.layout.addWidget(self.findBox)
 
 		# Prefix dropdown
@@ -38,7 +39,7 @@ class FindUI(QWidget):
 
 		# Button that changes label
 		selectButton = QPushButton("Select", self)
-		genf.setButton(selectButton, self.layout, text="Select", isMainBtn=True, iconName="selectIcon")
+		genf.setButton(selectButton, self.layout, text="Select", tooltipTitle=data.selectBtnTltpTitle, tooltip=data.selectBtnTltp, isMainBtn=True, iconName="selectIcon")
 		selectButton.clicked.connect(self.selectClicked)
 
 
@@ -49,7 +50,7 @@ class FindUI(QWidget):
 
 		# Find Duplicates button
 		self.duplicateBtn = QPushButton(self)
-		genf.setButton(self.duplicateBtn, self.layout, tooltip=data.duplicateTltp, isIcon=True, iconName="duplicatesIcon")
+		genf.setButton(self.duplicateBtn, self.layout, tooltipTitle=data.duplicateTltpTitle, tooltip=data.duplicateTltp, isIcon=True, iconName="duplicatesIcon")
 		self.duplicateBtn.clicked.connect(self.findDuplicates)
 
 
@@ -60,15 +61,13 @@ class FindUI(QWidget):
 
 		# Print and save button
 		self.printBtn = QPushButton("Save Selected")
-		genf.setStyledTooltip(self.printBtn, data.duplicateTltpTitle, data.duplicateTltp)
-		#self.printBtn.setToolTip(data.duplicateTltp)
+		genf.setStyledTooltip(self.printBtn, data.saveSelectionTltpTitle, data.saveSelectionTltp)
 		self.printBtn.clicked.connect(self.printSave)
 		self.layout.addWidget(self.printBtn)
 
 		# Select saved button
 		self.savedBtn = QPushButton("Load Selection")
 		genf.setStyledTooltip(self.savedBtn, data.savedTltpTitle, data.savedTltp)
-		#self.savedBtn.setToolTip(data.savedTltp)
 		self.savedBtn.clicked.connect(self.selectSaved)
 		self.layout.addWidget(self.savedBtn)
 
@@ -80,7 +79,7 @@ class FindUI(QWidget):
 
 		# Select bound joints button
 		self.boundJointsBtn = QPushButton(self)
-		genf.setButton(self.boundJointsBtn, self.layout, tooltip=data.boundJointsTltp, isIcon=True, iconName="boundJointsIcon")
+		genf.setButton(self.boundJointsBtn, self.layout, tooltipTitle=data.boundJointsTltpTitle, tooltip=data.boundJointsTltp, isIcon=True, iconName="boundJointsIcon")
 		self.boundJointsBtn.clicked.connect(self.selectBoundJoints)
 
 
@@ -91,11 +90,12 @@ class FindUI(QWidget):
 
 		# Select 5 vert influeces button
 		self.fiveVertsBtn = QPushButton(self)
-		genf.setButton(self.fiveVertsBtn, self.layout, tooltip=data.fiveVertsTltp, isIcon=True, iconName="selectVerticesIcon")
+		genf.setButton(self.fiveVertsBtn, self.layout, tooltipTitle=data.fiveVertsTltpTitle, tooltip=data.fiveVertsTltp, isIcon=True, iconName="selectVerticesIcon")
 		self.fiveVertsBtn.clicked.connect(self.selectMultipleInfluence)
 
 		# Joint Influence Label
 		typeLabel = QLabel("Influence:")
+		genf.setStyledTooltip(typeLabel, data.influenceTltpTitle, data.influenceTltp)
 		self.layout.addWidget(typeLabel)
 
 		# Amount of Influences
