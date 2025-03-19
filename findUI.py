@@ -62,13 +62,13 @@ class FindUI(QWidget):
 		# Print and save button
 		self.printBtn = QPushButton("Save Selected")
 		genf.setStyledTooltip(self.printBtn, data.saveSelectionTltpTitle, data.saveSelectionTltp)
-		self.printBtn.clicked.connect(self.printSave)
+		self.printBtn.clicked.connect(self.saveSelection)
 		self.layout.addWidget(self.printBtn)
 
 		# Select saved button
 		self.savedBtn = QPushButton("Load Selection")
 		genf.setStyledTooltip(self.savedBtn, data.savedTltpTitle, data.savedTltp)
-		self.savedBtn.clicked.connect(self.selectSaved)
+		self.savedBtn.clicked.connect(self.loadSelection)
 		self.layout.addWidget(self.savedBtn)
 
 
@@ -129,11 +129,11 @@ class FindUI(QWidget):
 	def findDuplicates(self):
 		ff.FindFunctions().findDuplicates()
 
-	def printSave(self):
-		ff.FindFunctions().printSave()
+	def saveSelection(self):
+		ff.FindFunctions().saveSelection()
 
-	def selectSaved(self):
-		ff.FindFunctions().selectSaved()
+	def loadSelection(self):
+		ff.FindFunctions().loadSelection()
 
 	def selectBoundJoints(self):
 		ff.FindFunctions().selectBoundJoints()

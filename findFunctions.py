@@ -53,7 +53,7 @@ class FindFunctions():
 		else:
 			pm.warning("No duplicate nodes found.")
 
-	def printSave(self):
+	def saveSelection(self):
 		selected_nodes = pm.ls(sl=True)
 		if not selected_nodes:
 			pm.warning("No nodes selected.")
@@ -106,7 +106,7 @@ class FindFunctions():
 
 			print(selectedObjs)
 
-	def selectSaved(self):
+	def loadSelection(self):
 		try:
 			current_scene_path = cmds.file(query=True, sceneName=True)
 			if not current_scene_path:
@@ -129,14 +129,20 @@ class FindFunctions():
 		dialog = QDialog()
 		dialog.setWindowTitle("Load Selection")
 		layout = QVBoxLayout()
-		list_widget = QListWidget()
+		listWidget = QListWidget()
 		for group in groups:
-			list_widget.addItem(group)
+			listWidget.addItem(group)
 
-		load_button = QPushButton("Load")
-		load_button.clicked.connect(lambda: self.select_group(list_widget.currentItem().text(), dialog))
-		layout.addWidget(list_widget)
-		layout.addWidget(load_button)
+		layout.addWidget(listWidget)
+
+		loadSelButton = QPushButton("Load")
+		loadSelButton.clicked.connect(lambda: self.selectGroup(listWidget.currentItem().text(), dialog))
+		layout.addWidget(loadSelButton)
+
+		delSelButton = QPushButton("Delete Selection")
+		delSelButton.clicked.connect(lambda: self.deleteSelection(listWidget.currentItem().text(), listWidget))
+		layout.addWidget(delSelButton)
+
 		dialog.setLayout(layout)
 		dialog.exec_()
 
@@ -157,14 +163,14 @@ class FindFunctions():
 						current_group = None
 		return group_lines
 
-	def select_group(self, group_name, dialog):
+	def selectGroup(self, groupName, dialog):
 		try:
 			with open(self.file_path, 'r') as file:
 				lines = file.readlines()
 			in_group = False
 			nodes_to_select = []
 			for line in lines:
-				if line.startswith("Group: {}".format(group_name)):
+				if line.startswith("Group: {}".format(groupName)):
 					in_group = True
 					continue
 				if line.startswith("EndGroup"):
@@ -172,11 +178,45 @@ class FindFunctions():
 				if in_group and not line.startswith("Group:"):
 					nodes_to_select.append(line.strip())
 			pm.select(nodes_to_select)
-			print("Selection group '{}' loaded.".format(group_name))
+			print("Selection group '{}' loaded.".format(groupName))
 			dialog.accept()
 		except Exception as e:
 			pm.warning("An error occurred: {}".format(e))
 
+	def deleteSelection(self, groupName, listWidget):
+		try:
+			# Read existing selections
+			with open(self.file_path, "r") as file:
+				lines = file.readlines()
+
+			filteredLines = []
+			inGroup = False
+
+			for line in lines:
+				if line.startswith("Group: {}".format(groupName)):
+					inGroup = True
+					continue
+				elif line.startswith("EndGroup") and inGroup == True:
+					inGroup = False
+					continue
+				if not inGroup:
+					filteredLines.append(line)
+
+			# Write back all groups
+			with open(self.file_path, 'w') as file:
+				file.writelines(filteredLines)
+
+			pm.warning(f"Delete {groupName} from selection list.")
+
+			# "Refresh" the list, removing the deleted item
+			for index in range(listWidget.count()):
+				item = listWidget.item(index)
+				if item.text() == groupName:
+					listWidget.takeItem(index)
+					break
+
+		except Exception as e:
+			pm.warning(f"An error occurred: {e}")
 
 	def selectBoundJoints(self):
 		selected = cmds.ls(sl=True)
