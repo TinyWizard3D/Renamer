@@ -1,6 +1,6 @@
 import pymel.core as pm
 import maya.cmds as cmds
-import data
+from Renamer import data
 
 
 class RenameFunctions():

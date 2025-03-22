@@ -1,12 +1,13 @@
 import os
-import data
+import pymel.core as pm
+from Renamer import data
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtWidgets import QFrame
 
 class GeneralFunction():
 	def __init__(self):		
 		currentDir = os.path.dirname(os.path.abspath(__file__))
-		self.iconsPath = os.path.join(currentDir, "imgs")
+		self.iconsPath = os.path.join(currentDir, "icons")
 
 	def setButton(self, btn, layout, text="", checked=False, checkable=False, tooltipTitle="", tooltip="", isIcon=False, isMainBtn=False, iconName=""):
 		btn.setText(text)

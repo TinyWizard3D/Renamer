@@ -5,9 +5,9 @@ from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtWidgets import QLayout, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QSpinBox, QRadioButton, QButtonGroup, QFrame, QSpacerItem, QSizePolicy, QSplitter, QToolBar, QAction, QMainWindow
 
 #--------Tools--------#
-import renameFunctions as rf
-import data
-import generalFunctions as gef
+from Renamer import renameFunctions as rf
+from Renamer import data
+from Renamer import generalFunctions as gef
 
 #-------Reload Tool Scripts------#
 imp.reload(rf)

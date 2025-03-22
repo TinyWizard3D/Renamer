@@ -1,0 +1,2 @@
+print ("------- importing Renamer");
+python("from Renamer import __init__");

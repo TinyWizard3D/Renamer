@@ -3,7 +3,7 @@ import os
 import pymel.core as pm
 import maya.cmds as cmds
 import maya.mel as mel
-import data
+from Renamer import data
 
 class GroupFunctions():
 	def groupNodes(self, settings):

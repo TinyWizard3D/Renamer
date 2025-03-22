@@ -12,12 +12,8 @@ import pymel.core as pm
 import re
 
 #--------Tools--------#
-import renameUI
-import findUI
-import deleteUI
-import groupUI
-import data
-import generalFunctions as gef
+from Renamer import renameUI, findUI, deleteUI, groupUI, data
+from Renamer import generalFunctions as gef
 
 #-------Reload Tool Scripts------#
 imp.reload(renameUI)

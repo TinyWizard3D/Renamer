@@ -1,11 +1,11 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, QSpinBox, QLineEdit, QComboBox, QFrame
 import imp
-import data
-import generalFunctions as gef
+from Renamer import data
 
 #--------Tools--------#
-import deleteFunctions as df
+from Renamer import generalFunctions as gef
+from Renamer import deleteFunctions as df
 
 #-------Reload Tool Scripts------#
 imp.reload(df)

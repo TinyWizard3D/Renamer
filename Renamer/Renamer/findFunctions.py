@@ -2,7 +2,7 @@ from PySide2.QtWidgets import QApplication, QInputDialog, QListWidget, QVBoxLayo
 import os
 import pymel.core as pm
 import maya.cmds as cmds
-import data
+from Renamer import data
 
 class FindFunctions():
 	def __init__(self):
@@ -273,7 +273,7 @@ class FindFunctions():
 
 			if max_influences == 0 and len(joints) == 0:
 				res.append(vert)
-			elif len(joints) == max_influences:
+			elif len(joints) >= max_influences:
 				res.append(vert)
 
 		return res
