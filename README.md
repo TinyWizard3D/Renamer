@@ -10,7 +10,7 @@ For any questions or feedback, please contact me at: slavbruner.dev@gmail.com
 <br><br>
 <hr>
 <h2>Installation</h2>
-1) <b>Download:</b> Click on the green button that says "Code", then "Download ZIP"<br><br>
+1) <b>Download:</b> Click on the green button that says "Code" at the top of this page, then "Download ZIP"<br><br>
 1) Copy Renamer.mod and the Renamer folder and paste them both in: C:\Users\<user>\Documents\maya\modules\<br><br>
 2) Copy userSetup.mel and paste it in: C:\Users\<user>\Documents\maya\<Maya Version>\scripts\<br><br>
 3) Open Maya and there should be a menu at the top called "Renamer Toolkit". Open that menu and click on "Open Renamer".<br><br>
