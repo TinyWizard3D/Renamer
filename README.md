@@ -23,11 +23,11 @@ Renamer Toolkit is only compatible with Maya version 2022 and above.
 <br><br>
 <hr>
 <h2>Support</h2>
-Full Documentation: https://slavbruner.vercel.app/tools/renamer
+Full Documentation: https://slavbruner.vercel.app/tools/renamer<br>
 For any question, feel free to send me an email to slavbruner.dev@gmail.com
 
 <br><br>
 <hr>
 
-Thank you for downloading Renamer Toolkit module!
+Thank you for downloading Renamer Toolkit module!<br>
 Renamer Toolkit was made by Slav Bruner.
