@@ -7,6 +7,7 @@ from PySide2.QtGui import QPalette, QColor, QFont
 from shiboken2 import wrapInstance
 import maya.OpenMayaUI as omui
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
+import webbrowser
 import maya.cmds as cmds
 import pymel.core as pm
 import re
@@ -94,6 +95,7 @@ class Renamer(MayaQWidgetDockableMixin, QWidget):
 		#-----Help Button-----#
 		self.helpBtn = QPushButton("?")
 		genf.setButton(self.helpBtn, self.rightLayout, text="?", tooltipTitle=data.helpTltpTitle, tooltip=data.helpTltp)
+		self.helpBtn.clicked.connect(lambda: webbrowser.open("https://slavbruner.vercel.app/tools/renamer"))
 		self.helpBtn.setStyleSheet("width: 10px")
 
 		# Stacked Widget

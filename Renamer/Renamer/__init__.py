@@ -1,7 +1,5 @@
 import pymel.core as pm
 
-print("---------------------------------hihi---------------------------")
-
 def createRenamerMenu():
     menuVar = 'RenamerMenu'
     menuName = 'Renamer Toolkit'
@@ -10,7 +8,7 @@ def createRenamerMenu():
         try:
             pm.deleteUI(menuVar, control=True)
         except Exception as e:
-            pm.warning("Failed to delete menu '{}': {}".format(menuVar, e))
+            pm.warning(f"Failed to delete menu '{menuVar}': {e}")
 
     mainWindow = pm.language.melGlobals['gMainWindow']
 
@@ -18,6 +16,6 @@ def createRenamerMenu():
 
     pm.menuItem(label='Open Renamer', command=lambda *args: __import__('Renamer.renamer_01', fromlist=['']).show_renamer())
 
-    print("---------------------------------Done with hihi---------------------------")
+    print("Imported Renamer Toolkit successfully")
 
 createRenamerMenu()

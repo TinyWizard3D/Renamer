@@ -1,2 +1,2 @@
-print ("------- importing Renamer");
+print ("Importing Renamer Toolkit");
 python("from Renamer import __init__");

@@ -28,7 +28,7 @@ class FindFunctions():
 			else:
 				pm.warning("Couldn't find any matching objects.")
 		except Exception as e:
-			pm.error("An error occurred: {}".format(e))
+			pm.error("An error occurred: {e}")
 
 
 	def populateSettings(self, settings):
@@ -93,14 +93,14 @@ class FindFunctions():
 						current_group = None
 
 			# Overwrite or add the new group
-			group_lines[group_name] = ["Group: {}\n".format(group_name)] + [node.name() + '\n' for node in selected_nodes] + ["EndGroup\n"]
+			group_lines[group_name] = [f"Group: {group_name}\n"] + [node.name() + '\n' for node in selected_nodes] + ["EndGroup\n"]
 
 			# Write back all groups
 			with open(self.file_path, 'w') as file:
 				for group in group_lines.values():
 					file.writelines(group)
 
-			pm.warning("Selection group '{}' saved to {}".format(group_name, self.file_path))
+			pm.warning(f"Selection group '{group_name}' saved to {self.file_path}")
 
 			selectedObjs = "[" + ", ".join('"' + str(obj) + '"' for obj in selected_nodes) + "]"
 
@@ -170,7 +170,7 @@ class FindFunctions():
 			in_group = False
 			nodes_to_select = []
 			for line in lines:
-				if line.startswith("Group: {}".format(groupName)):
+				if line.startswith(f"Group: {groupName}"):
 					in_group = True
 					continue
 				if line.startswith("EndGroup"):
@@ -178,10 +178,10 @@ class FindFunctions():
 				if in_group and not line.startswith("Group:"):
 					nodes_to_select.append(line.strip())
 			pm.select(nodes_to_select)
-			print("Selection group '{}' loaded.".format(groupName))
+			print(f"Selection group '{groupName}' loaded.")
 			dialog.accept()
 		except Exception as e:
-			pm.warning("An error occurred: {}".format(e))
+			pm.warning(f"An error occurred: {e}")
 
 	def deleteSelection(self, groupName, listWidget):
 		try:
@@ -193,7 +193,7 @@ class FindFunctions():
 			inGroup = False
 
 			for line in lines:
-				if line.startswith("Group: {}".format(groupName)):
+				if line.startswith(f"Group: {groupName}"):
 					inGroup = True
 					continue
 				elif line.startswith("EndGroup") and inGroup == True:
@@ -255,7 +255,7 @@ class FindFunctions():
 				cmds.select(clear=True)
 				cmds.select(res)
 			else:
-				pm.warning("No vertices found with influences greater than {}".format(max_influences))
+				pm.warning(f"No vertices found with influences greater than {max_influences}")
 		else:
 			pm.warning("No valid object selected.")
 
@@ -267,9 +267,6 @@ class FindFunctions():
 		for vert in vertices:
 			joints = cmds.skinPercent(
 				skin, vert, query=True, ignoreBelow=0.000001, transform=None)
-
-			print("max influences: " + str(max_influences))
-			print("Vertex: {}, Influences: {}".format(vert, len(joints)))
 
 			if max_influences == 0 and len(joints) == 0:
 				res.append(vert)

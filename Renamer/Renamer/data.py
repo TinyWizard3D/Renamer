@@ -1,8 +1,9 @@
+#----Lists----#
 typeList = ["all", "transform", "shape", "mesh", "joint", "locator", "nurbsCurve", "nurbsSurface", "ikHandle", "light", "camera"]
 toolsList = ["Rename", "Find", "Delete", "Group"]
 shapeTypes = ["mesh", "nurbsCurve", "nurbsSurface", "subdiv", "particle", "fluidShape"]
 
-# Tooltips
+#----Tooltips----#
 preTltpTitle = "Add Prefix"
 preTltp = "Write, or select from a list, a prefix for selected object/s. If left empty, no prefix will be added"
 
@@ -18,7 +19,7 @@ suffTltp = "Write, or select from a list, a suffix for selected object/s. If lef
 renameBtnTltpTitle= "Rename Selection"
 renameBtnTltp = "Click to rename all selected objects according to your chosen preferences"
 
-paddingTltpTitle = "Add Zeros Next To Number"
+paddingTltpTitle = "Number Padding"
 paddingTltp = "Choose how many zeros should be added to all selected objects, example: 1, 01, 001, etc."
 
 startTltpTitle = "Starting Number"
@@ -139,33 +140,31 @@ descendingTltp = "Orders all selected objects in descending order"
 helpTltpTitle = "Help"
 helpTltp = "Opens the help menu"
 
-#mainColor = teal
-#hoverColor = #009a9a
 
+#----Stylesheets----#
 mainColor = "#5285a6"
 hoverColor = "#62a0c7"
 
-#----Stylesheets----#
-mainBtnStylesheet = """
+mainBtnStylesheet = f"""
         QPushButton {{
-            background-color: {}; 
-            width: 80px; 
+            background-color: {mainColor}; 
+            width: 100px; 
             height: 15px; 
             padding-bottom: 2px;
             padding-left: 5px;
             padding-right: 5px;
         }}
         QPushButton:checked {{
-            background-color: {};
+            background-color: {mainColor};
             color: white;
         }}
         QPushButton:pressed {{
-            background-color: {};
+            background-color: {mainColor};
             color: white;
         }}
-    """.format(mainColor, mainColor, mainColor)
+    """
 
-iconStylesheet = """
+iconStylesheet = f"""
         QPushButton {{
             background-color: transparent;
             color: white;
@@ -175,18 +174,18 @@ iconStylesheet = """
             padding: 5px;
         }}
         QPushButton:hover {{
-            background-color: {};
+            background-color: {hoverColor};
             color: white;
         }}
         QPushButton:checked {{
-            background-color: {};
+            background-color: {mainColor};
             color: white;
         }}
         QPushButton:pressed {{
-            background-color: {};
+            background-color: {mainColor};
             color: white;
         }}
-    """.format(hoverColor, mainColor, mainColor)
+    """
 
 
 tooltipStylesheet = """

@@ -67,13 +67,13 @@ class RenameFunctions():
 				decorName = self.handleDecor(renamedNode, settings)
 
 				# Assemble name
-				assembledStrName = "{}{}".format(self.prefixText, decorName)
+				assembledStrName = f"{self.prefixText}{decorName}"
 				
 				# Add padding
 				numberedName = self.handlePadding()
 
 				# Add Prefix
-				assembledName = "{}{}{}".format(assembledStrName, numberedName, self.suffixText)
+				assembledName = f"{assembledStrName}{numberedName}{self.suffixText}"
 
 				# Add "Shape" as suffix if node is of type Shape
 				if node.nodeType() in data.shapeTypes:
@@ -135,7 +135,7 @@ class RenameFunctions():
 	def handlePadding(self):
 		numberedName = ""
 
-		numPadding = "{{:0{}d}}".format(self.paddingAmount)
+		numPadding = f"{{:0{self.paddingAmount}d}}"
 
 		if self.paddingAmount > 0:
 			number = self.paddingStart + self.paddingCount * self.paddingStep

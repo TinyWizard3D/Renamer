@@ -54,12 +54,10 @@ class DeleteFunctions():
 		self.includeShapes = settings.get('includeShapes', self.includeShapes)
 
 	def deleteName(self, nodeList):
-		print("------STARTING---------")
 		try:
 			pm.undoInfo(openChunk=True)
 
 			for node in nodeList:
-				print("---------------------")
 				nodeName = node.name()
 
 				if "|" in nodeName:
@@ -82,7 +80,6 @@ class DeleteFunctions():
 
 	def removeText(self, nodeName):
 		newName = nodeName.replace(self.delText, '')
-		print("removeText: " + newName)
 		return newName
 
 
@@ -92,7 +89,6 @@ class DeleteFunctions():
 			self.delStartValue = len(nodeName)
 
 		newName = nodeName[self.delStartValue:len(nodeName)]
-		print("removePre: " + newName)
 		return newName
 
 	def removeSuff(self, nodeName):
@@ -105,8 +101,6 @@ class DeleteFunctions():
 			self.delEndValue = self.delEndValue*-1
 
 		newName = nodeName[0:self.delEndValue]
-		print("value: " + str(self.delEndValue))
-		print("removeSuff: " + newName)
 		return newName
 
 
@@ -119,9 +113,9 @@ class DeleteFunctions():
 			try:
 				cmds.namespace(moveNamespace=(ns, ':'), force=True)
 				cmds.namespace(removeNamespace=ns)
-				pm.warning("Namespace '{}' deleted.".format(ns))
+				pm.warning(f"Namespace '{ns}' deleted.")
 			except Exception as e:
-				print("Error deleting namespace '{}': {}".format(ns, e))
+				print(f"Error deleting namespace '{ns}': {e}")
 
 	def deleteUnconnected(self):
 		mel.eval('hyperShadePanelMenuCommand("hyperShadePanel1", "deleteUnusedNodes")')
