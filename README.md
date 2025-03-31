@@ -30,5 +30,5 @@ For any question, feel free to send me an email to slavbruner.dev@gmail.com
 <br><br>
 <hr>
 
-Thank you for downloading Renamer Toolkit module!
+Thank you for downloading Renamer Toolkit module!<br>
 Slav Bruner
