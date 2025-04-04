@@ -3,7 +3,7 @@
 <h2>What is Renamer Toolkit?</h2>
 Renamer Toolkit is a PySide2 and Python/PyMel-based tool developed specifically for Autodesk Maya.<br>
 Built with seamless Maya UI integration in mind, it enables renaming and management of scene objects, adhering closely to production requirements and naming conventions. The toolkit provides robust handling for complex renaming tasks, hierarchical structures, and node-type specificity, offering flexible and efficient workflow improvements directly within Maya's native interface.
-<br><br>The Renamer Toolkit contains four distinct menus: Rename, Find, Delete, and Groupâ€”each dedicated to specific functionalities within Maya for efficient object management.
+<br><br>The Renamer Toolkit contains four distinct menus: Rename, Find, Delete, and Group, each dedicated to specific functionalities within Maya for efficient object management.
 <br><br>
 For any questions or feedback, please contact me at: slavbruner.dev@gmail.com
 
@@ -24,7 +24,7 @@ Renamer Toolkit was developed to address a specific gap in existing solutions â€
 <br><br>
 <hr>
 <h2>Compatibility</h2>
-Renamer Toolkit is only compatible with Maya version 2022 and above.
+Renamer Toolkit is compatible with Maya version 2022 and above.
 
 <br><br>
 <hr>
